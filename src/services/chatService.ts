@@ -1,5 +1,6 @@
 import { ChatMessage, ChatResponse, Feedback } from "@/types/chat";
 import { getRandomChallenge, shouldSendChallenge } from "./imageChallenge";
+import { checkSpelling } from "./spellChecker";
 
 /**
  * Pre-defined conversation starters and responses for the French chatbot.
@@ -138,6 +139,26 @@ function generateFeedback(userMessage: string): Feedback {
       corrected = corrected.replace(new RegExp(wrong, "gi"), correct);
       issues.push(`"${wrong}" → "${correct}" (accent eksik)`);
     }
+  }
+
+  // Check for misspelled words using Levenshtein distance
+  const spellErrors = checkSpelling(userMessage);
+  for (const error of spellErrors) {
+    // Skip if already caught by accent check
+    const alreadyCaught = issues.some((issue) => issue.includes(error.original));
+    if (alreadyCaught) continue;
+
+    corrected = corrected.replace(
+      new RegExp(`\\b${error.original}\\b`, "gi"),
+      error.suggestion
+    );
+    issues.push(`"${error.original}" → "${error.suggestion}" (yazım hatası)`);
+  }
+
+  if (spellErrors.length > 0) {
+    tips.push(
+      "Yazım hatalarını önlemek için sık kullandığınız kelimeleri not edin ve tekrar edin."
+    );
   }
 
   // Check if sentence starts with uppercase
