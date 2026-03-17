@@ -9,108 +9,257 @@ interface ImageChallenge {
 }
 
 /**
- * Collection of image-based vocabulary challenges.
- * Each challenge includes an image, a question, expected keywords,
- * and sample hint sentences the user can reveal for guidance.
+ * Topic pool for dynamic image challenge generation.
+ * Each topic has French/English labels, keywords, and hint templates.
+ * Images are fetched dynamically from loremflickr with cache-busting.
  */
-const challenges: ImageChallenge[] = [
+interface Topic {
+  keywords: string[];        // for loremflickr search
+  questionFr: string;
+  questionEn: string;
+  answerKeywords: string[];
+  hints: HintSentence[];
+}
+
+const topics: Topic[] = [
   {
-    imageUrl: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop",
-    questionFr: "Qu'est-ce que c'est ? 🤔",
-    questionEn: "What is this?",
-    answerKeywords: ["café", "tasse", "coffee", "cup"],
-    hintSentences: [
+    keywords: ["coffee", "cafe"],
+    questionFr: "Qu'est-ce que vous voyez sur cette image ?",
+    questionEn: "What do you see in this image?",
+    answerKeywords: ["café", "tasse", "boisson"],
+    hints: [
       { fr: "C'est une tasse de café.", en: "It's a cup of coffee." },
-      { fr: "Je vois du café noir dans une tasse blanche.", en: "I see black coffee in a white cup." },
-      { fr: "C'est une boisson chaude, probablement du café.", en: "It's a hot drink, probably coffee." },
+      { fr: "Je vois une boisson chaude.", en: "I see a hot drink." },
+      { fr: "Il y a du café sur la table.", en: "There is coffee on the table." },
     ],
   },
   {
-    imageUrl: "https://images.unsplash.com/photo-1560807707-8cc77767d783?w=400&h=300&fit=crop",
-    questionFr: "Quel animal voyez-vous ? 🐾",
+    keywords: ["dog", "puppy"],
+    questionFr: "Quel animal voyez-vous ?",
     questionEn: "What animal do you see?",
-    answerKeywords: ["chien", "dog"],
-    hintSentences: [
-      { fr: "C'est un chien.", en: "It's a dog." },
-      { fr: "Je vois un petit chien mignon.", en: "I see a cute little dog." },
-      { fr: "C'est un chien qui regarde la caméra.", en: "It's a dog looking at the camera." },
+    answerKeywords: ["chien", "animal", "mignon"],
+    hints: [
+      { fr: "C'est un chien adorable.", en: "It's an adorable dog." },
+      { fr: "Je vois un petit chien.", en: "I see a small dog." },
+      { fr: "L'animal a l'air content.", en: "The animal looks happy." },
     ],
   },
   {
-    imageUrl: "https://images.unsplash.com/photo-1568702846914-96b305d2uj29?w=400&h=300&fit=crop",
-    questionFr: "Qu'est-ce que vous voyez sur la photo ? 📸",
-    questionEn: "What do you see in the photo?",
-    answerKeywords: ["livre", "livres", "book", "bibliothèque"],
-    hintSentences: [
-      { fr: "Ce sont des livres sur une étagère.", en: "These are books on a shelf." },
-      { fr: "Je vois une bibliothèque pleine de livres.", en: "I see a library full of books." },
-      { fr: "Il y a beaucoup de livres de différentes couleurs.", en: "There are many books of different colors." },
+    keywords: ["cat", "kitten"],
+    questionFr: "Décrivez cet animal !",
+    questionEn: "Describe this animal!",
+    answerKeywords: ["chat", "mignon", "animal", "petit"],
+    hints: [
+      { fr: "C'est un chat.", en: "It's a cat." },
+      { fr: "Je vois un petit chat mignon.", en: "I see a cute little cat." },
+      { fr: "Le chat est très beau.", en: "The cat is very beautiful." },
     ],
   },
   {
-    imageUrl: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop",
-    questionFr: "Décrivez ce plat ! 🍽️",
-    questionEn: "Describe this dish!",
-    answerKeywords: ["salade", "légumes", "nourriture", "plat"],
-    hintSentences: [
-      { fr: "C'est une salade avec des légumes frais.", en: "It's a salad with fresh vegetables." },
-      { fr: "Je vois un plat coloré avec des légumes.", en: "I see a colorful dish with vegetables." },
-      { fr: "C'est un repas sain et délicieux.", en: "It's a healthy and delicious meal." },
-    ],
-  },
-  {
-    imageUrl: "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=400&h=300&fit=crop",
-    questionFr: "Quelle ville est-ce ? 🏙️",
+    keywords: ["paris", "eiffel"],
+    questionFr: "Quelle ville est-ce ?",
     questionEn: "Which city is this?",
-    answerKeywords: ["paris", "tour eiffel", "france"],
-    hintSentences: [
+    answerKeywords: ["paris", "france", "tour", "eiffel", "ville"],
+    hints: [
       { fr: "C'est Paris, la capitale de la France.", en: "It's Paris, the capital of France." },
-      { fr: "Je vois la Tour Eiffel au loin.", en: "I see the Eiffel Tower in the distance." },
-      { fr: "C'est une belle vue de Paris avec ses bâtiments.", en: "It's a beautiful view of Paris with its buildings." },
+      { fr: "Je reconnais la Tour Eiffel.", en: "I recognize the Eiffel Tower." },
+      { fr: "C'est une ville magnifique.", en: "It's a magnificent city." },
     ],
   },
   {
-    imageUrl: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=400&h=300&fit=crop",
-    questionFr: "Que fait cette personne ? 🧍",
-    questionEn: "What is this person doing?",
-    answerKeywords: ["homme", "debout", "montagne", "regarde"],
-    hintSentences: [
-      { fr: "Un homme est debout sur une montagne.", en: "A man is standing on a mountain." },
-      { fr: "Il regarde le paysage devant lui.", en: "He is looking at the landscape in front of him." },
-      { fr: "Cette personne admire la vue magnifique.", en: "This person is admiring the magnificent view." },
+    keywords: ["beach", "ocean", "sea"],
+    questionFr: "Décrivez ce paysage !",
+    questionEn: "Describe this landscape!",
+    answerKeywords: ["plage", "mer", "océan", "sable", "eau"],
+    hints: [
+      { fr: "C'est une belle plage.", en: "It's a beautiful beach." },
+      { fr: "Je vois la mer et le sable.", en: "I see the sea and the sand." },
+      { fr: "L'eau est très bleue.", en: "The water is very blue." },
     ],
   },
   {
-    imageUrl: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop",
-    questionFr: "Décrivez cette scène ! 👥",
-    questionEn: "Describe this scene!",
-    answerKeywords: ["gens", "personnes", "travail", "groupe", "bureau"],
-    hintSentences: [
-      { fr: "Un groupe de personnes travaille ensemble.", en: "A group of people are working together." },
-      { fr: "Ils sont dans un bureau et discutent.", en: "They are in an office and are discussing." },
-      { fr: "Ce sont des collègues qui collaborent sur un projet.", en: "They are colleagues collaborating on a project." },
+    keywords: ["food", "dinner", "restaurant"],
+    questionFr: "Décrivez ce plat !",
+    questionEn: "Describe this dish!",
+    answerKeywords: ["nourriture", "plat", "manger", "repas", "délicieux"],
+    hints: [
+      { fr: "C'est un plat délicieux.", en: "It's a delicious dish." },
+      { fr: "Je vois de la nourriture appétissante.", en: "I see appetizing food." },
+      { fr: "Ce repas a l'air très bon.", en: "This meal looks very good." },
     ],
   },
   {
-    imageUrl: "https://images.unsplash.com/photo-1526318896980-cf78c088247c?w=400&h=300&fit=crop",
-    questionFr: "Quel temps fait-il ? ☀️",
+    keywords: ["mountain", "hiking", "nature"],
+    questionFr: "Que voyez-vous dans cette photo ?",
+    questionEn: "What do you see in this photo?",
+    answerKeywords: ["montagne", "nature", "paysage", "vert", "arbre"],
+    hints: [
+      { fr: "Je vois une grande montagne.", en: "I see a big mountain." },
+      { fr: "C'est un paysage naturel magnifique.", en: "It's a magnificent natural landscape." },
+      { fr: "La nature est très belle ici.", en: "Nature is very beautiful here." },
+    ],
+  },
+  {
+    keywords: ["city", "street", "urban"],
+    questionFr: "Décrivez cette scène urbaine !",
+    questionEn: "Describe this urban scene!",
+    answerKeywords: ["ville", "rue", "bâtiment", "gens", "urbain"],
+    hints: [
+      { fr: "C'est une rue dans une grande ville.", en: "It's a street in a big city." },
+      { fr: "Je vois des bâtiments et des gens.", en: "I see buildings and people." },
+      { fr: "La ville est très animée.", en: "The city is very lively." },
+    ],
+  },
+  {
+    keywords: ["flower", "garden", "rose"],
+    questionFr: "Que voyez-vous dans le jardin ?",
+    questionEn: "What do you see in the garden?",
+    answerKeywords: ["fleur", "jardin", "rose", "beau", "couleur"],
+    hints: [
+      { fr: "Ce sont de belles fleurs.", en: "These are beautiful flowers." },
+      { fr: "Je vois un jardin coloré.", en: "I see a colorful garden." },
+      { fr: "Les fleurs sont magnifiques.", en: "The flowers are magnificent." },
+    ],
+  },
+  {
+    keywords: ["bicycle", "cycling"],
+    questionFr: "Qu'est-ce que c'est ?",
+    questionEn: "What is this?",
+    answerKeywords: ["vélo", "bicyclette", "cyclisme", "roue"],
+    hints: [
+      { fr: "C'est un vélo.", en: "It's a bicycle." },
+      { fr: "Je vois une bicyclette.", en: "I see a bicycle." },
+      { fr: "Faire du vélo est bon pour la santé.", en: "Cycling is good for health." },
+    ],
+  },
+  {
+    keywords: ["rain", "umbrella", "storm"],
+    questionFr: "Quel temps fait-il ?",
     questionEn: "What is the weather like?",
-    answerKeywords: ["soleil", "coucher", "ciel", "nuage", "plage"],
-    hintSentences: [
-      { fr: "Le soleil se couche sur la plage.", en: "The sun is setting on the beach." },
-      { fr: "Le ciel est orange et rouge, c'est magnifique.", en: "The sky is orange and red, it's magnificent." },
-      { fr: "Il fait beau, on voit un coucher de soleil.", en: "The weather is nice, we see a sunset." },
+    answerKeywords: ["pluie", "parapluie", "temps", "nuage", "mouillé"],
+    hints: [
+      { fr: "Il pleut dehors.", en: "It's raining outside." },
+      { fr: "Je vois un parapluie sous la pluie.", en: "I see an umbrella in the rain." },
+      { fr: "Le temps est mauvais aujourd'hui.", en: "The weather is bad today." },
+    ],
+  },
+  {
+    keywords: ["sunset", "sky", "sunrise"],
+    questionFr: "Décrivez le ciel !",
+    questionEn: "Describe the sky!",
+    answerKeywords: ["soleil", "coucher", "ciel", "orange", "beau"],
+    hints: [
+      { fr: "Le soleil se couche.", en: "The sun is setting." },
+      { fr: "Le ciel est orange et rouge.", en: "The sky is orange and red." },
+      { fr: "C'est un magnifique coucher de soleil.", en: "It's a magnificent sunset." },
+    ],
+  },
+  {
+    keywords: ["book", "reading", "library"],
+    questionFr: "Que voyez-vous ici ?",
+    questionEn: "What do you see here?",
+    answerKeywords: ["livre", "lire", "bibliothèque", "page"],
+    hints: [
+      { fr: "Ce sont des livres.", en: "These are books." },
+      { fr: "Je vois une bibliothèque.", en: "I see a library." },
+      { fr: "La lecture est un passe-temps merveilleux.", en: "Reading is a wonderful hobby." },
+    ],
+  },
+  {
+    keywords: ["market", "fruit", "vegetables"],
+    questionFr: "Qu'est-ce qu'on vend ici ?",
+    questionEn: "What is sold here?",
+    answerKeywords: ["marché", "fruit", "légume", "vendre", "frais"],
+    hints: [
+      { fr: "C'est un marché de fruits et légumes.", en: "It's a fruit and vegetable market." },
+      { fr: "Je vois des produits frais.", en: "I see fresh products." },
+      { fr: "Les fruits ont l'air délicieux.", en: "The fruits look delicious." },
+    ],
+  },
+  {
+    keywords: ["snow", "winter", "ski"],
+    questionFr: "Quelle saison est-ce ?",
+    questionEn: "What season is this?",
+    answerKeywords: ["hiver", "neige", "froid", "blanc", "ski"],
+    hints: [
+      { fr: "C'est l'hiver, il y a de la neige.", en: "It's winter, there is snow." },
+      { fr: "Tout est blanc et froid.", en: "Everything is white and cold." },
+      { fr: "Il fait très froid dehors.", en: "It's very cold outside." },
+    ],
+  },
+  {
+    keywords: ["music", "guitar", "concert"],
+    questionFr: "Que fait cette personne ?",
+    questionEn: "What is this person doing?",
+    answerKeywords: ["musique", "guitare", "jouer", "instrument", "concert"],
+    hints: [
+      { fr: "Cette personne joue de la musique.", en: "This person is playing music." },
+      { fr: "Je vois un instrument de musique.", en: "I see a musical instrument." },
+      { fr: "La musique est un art magnifique.", en: "Music is a magnificent art." },
+    ],
+  },
+  {
+    keywords: ["train", "railway", "station"],
+    questionFr: "Quel moyen de transport voyez-vous ?",
+    questionEn: "What means of transport do you see?",
+    answerKeywords: ["train", "gare", "transport", "voyage", "rail"],
+    hints: [
+      { fr: "C'est un train à la gare.", en: "It's a train at the station." },
+      { fr: "Je vois un moyen de transport.", en: "I see a means of transport." },
+      { fr: "Le train est prêt à partir.", en: "The train is ready to leave." },
+    ],
+  },
+  {
+    keywords: ["painting", "art", "museum"],
+    questionFr: "Que voyez-vous dans ce musée ?",
+    questionEn: "What do you see in this museum?",
+    answerKeywords: ["art", "peinture", "musée", "tableau", "beau"],
+    hints: [
+      { fr: "Je vois une œuvre d'art.", en: "I see a work of art." },
+      { fr: "C'est un beau tableau.", en: "It's a beautiful painting." },
+      { fr: "Le musée est plein d'art magnifique.", en: "The museum is full of magnificent art." },
     ],
   },
 ];
 
+// Track used indices so we don't repeat topics until all are exhausted
+let usedIndices: Set<number> = new Set();
+
 /**
- * Returns a random image challenge from the collection.
- * Used to periodically test the user's French vocabulary with visual cues.
+ * Generates a dynamic image challenge by randomly selecting a topic
+ * and constructing a fresh image URL with cache-busting.
+ * Cycles through all topics before repeating any.
  */
 export function getRandomChallenge(): ImageChallenge {
-  const index = Math.floor(Math.random() * challenges.length);
-  return challenges[index];
+  // Reset pool when exhausted
+  if (usedIndices.size >= topics.length) {
+    usedIndices = new Set();
+  }
+
+  // Pick a random unused topic
+  let index: number;
+  do {
+    index = Math.floor(Math.random() * topics.length);
+  } while (usedIndices.has(index));
+  usedIndices.add(index);
+
+  const topic = topics[index];
+  const keyword = topic.keywords[Math.floor(Math.random() * topic.keywords.length)];
+
+  // Cache-busting with timestamp + random so every request gets a fresh image
+  const cacheBuster = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const imageUrl = `https://loremflickr.com/400/300/${encodeURIComponent(keyword)}?lock=${cacheBuster}`;
+
+  // Shuffle hints so order varies each time
+  const shuffledHints = [...topic.hints].sort(() => Math.random() - 0.5);
+
+  return {
+    imageUrl,
+    questionFr: topic.questionFr,
+    questionEn: topic.questionEn,
+    answerKeywords: topic.answerKeywords,
+    hintSentences: shuffledHints,
+  };
 }
 
 /**
