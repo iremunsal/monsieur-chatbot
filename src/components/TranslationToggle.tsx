@@ -9,7 +9,7 @@ interface TranslationToggleProps {
 
 /**
  * Renders a toggle button that reveals the English translation of a French text.
- * Clicking the button slides open/closed the English translation below the French content.
+ * Uses a themed pill button and smooth slide animation.
  */
 export default function TranslationToggle({
   textFr,
@@ -19,13 +19,13 @@ export default function TranslationToggle({
 
   return (
     <div>
-      <p className="whitespace-pre-wrap">{textFr}</p>
+      <p className="whitespace-pre-wrap leading-relaxed">{textFr}</p>
       <button
         onClick={() => setShowTranslation(!showTranslation)}
-        className="mt-2 flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
+        className="mt-2.5 inline-flex items-center gap-1.5 text-[11px] font-semibold text-navy-700 hover:text-navy-900 transition-colors cursor-pointer bg-navy-900/5 hover:bg-navy-900/10 rounded-full px-3 py-1"
         aria-label={showTranslation ? "Hide translation" : "Show translation"}
       >
-        <span className="text-sm">{showTranslation ? "🔽" : "🔼"}</span>
+        <span className="text-xs">🇬🇧</span>
         {showTranslation ? "Çeviriyi Gizle" : "İngilizce Çeviri"}
       </button>
       <div
@@ -33,7 +33,7 @@ export default function TranslationToggle({
           showTranslation ? "max-h-40 opacity-100 mt-2" : "max-h-0 opacity-0"
         }`}
       >
-        <p className="text-sm italic text-gray-500 border-l-2 border-blue-300 pl-2">
+        <p className="text-sm italic text-gray-500 border-l-2 border-navy-700/30 pl-3">
           {textEn}
         </p>
       </div>

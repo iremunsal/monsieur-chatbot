@@ -8,9 +8,9 @@ interface HintButtonProps {
 }
 
 /**
- * Expandable hint button for image challenges.
- * Shows sample French sentences with English translations
- * to guide the user on how to respond to a visual prompt.
+ * Expandable hint panel for image challenges.
+ * Shows sample French response sentences with English translations
+ * in themed cards that match the application's design language.
  */
 export default function HintButton({ hints }: HintButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,26 +19,26 @@ export default function HintButton({ hints }: HintButtonProps) {
     <div className="mt-3">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 text-xs font-medium text-amber-600 hover:text-amber-800 transition-colors cursor-pointer bg-amber-50 hover:bg-amber-100 rounded-lg px-3 py-1.5"
+        className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-gold-500 hover:text-gold-400 transition-colors cursor-pointer bg-gold-400/10 hover:bg-gold-400/20 rounded-full px-3 py-1"
         aria-label={isOpen ? "Hide hints" : "Show hints"}
       >
-        <span className="text-sm">💡</span>
+        <span className="text-xs">💡</span>
         {isOpen ? "İpuçlarını Gizle" : "Olası Cevapları Gör"}
       </button>
 
       <div
         className={`overflow-hidden transition-all duration-300 ${
-          isOpen ? "max-h-96 opacity-100 mt-2" : "max-h-0 opacity-0"
+          isOpen ? "max-h-96 opacity-100 mt-2.5" : "max-h-0 opacity-0"
         }`}
       >
         <div className="space-y-2">
           {hints.map((hint, index) => (
             <div
               key={index}
-              className="bg-amber-50/60 border border-amber-200 rounded-lg p-2.5"
+              className="bg-cream-50 border border-gold-400/20 rounded-xl p-3"
             >
-              <p className="text-sm font-medium text-gray-800">{hint.fr}</p>
-              <p className="text-xs text-gray-500 italic mt-0.5">{hint.en}</p>
+              <p className="text-sm font-medium text-navy-900">{hint.fr}</p>
+              <p className="text-xs text-gray-400 italic mt-1">{hint.en}</p>
             </div>
           ))}
         </div>

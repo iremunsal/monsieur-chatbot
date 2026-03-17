@@ -3,6 +3,7 @@
 import { useRef, useEffect } from "react";
 import { ChatMessage } from "@/types/chat";
 import ChatBubble from "./ChatBubble";
+import MonsieurLogo from "./MonsieurLogo";
 
 interface ChatWindowProps {
   messages: ChatMessage[];
@@ -10,8 +11,8 @@ interface ChatWindowProps {
 }
 
 /**
- * Scrollable chat window that displays all messages and a typing indicator.
- * Auto-scrolls to the bottom when new messages arrive.
+ * Scrollable chat window with custom scrollbar styling.
+ * Displays messages and an animated typing indicator when the bot is responding.
  */
 export default function ChatWindow({ messages, isLoading }: ChatWindowProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -21,21 +22,21 @@ export default function ChatWindow({ messages, isLoading }: ChatWindowProps) {
   }, [messages, isLoading]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-2">
+    <div className="flex-1 overflow-y-auto p-5 chat-scroll">
       {messages.map((msg) => (
         <ChatBubble key={msg.id} message={msg} />
       ))}
 
       {isLoading && (
-        <div className="flex justify-start mb-4">
-          <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-bold mr-2 shrink-0">
-            M
+        <div className="flex justify-start mb-5">
+          <div className="mr-2.5 shrink-0">
+            <MonsieurLogo size={34} />
           </div>
-          <div className="bg-white rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-gray-100">
-            <div className="flex gap-1">
-              <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:0ms]" />
-              <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:150ms]" />
-              <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:300ms]" />
+          <div className="bg-white rounded-2xl rounded-bl-sm px-5 py-3.5 shadow-sm border border-gray-200/60">
+            <div className="flex gap-1.5">
+              <span className="w-2 h-2 bg-navy-700 rounded-full animate-bounce [animation-delay:0ms] opacity-60" />
+              <span className="w-2 h-2 bg-navy-700 rounded-full animate-bounce [animation-delay:150ms] opacity-60" />
+              <span className="w-2 h-2 bg-navy-700 rounded-full animate-bounce [animation-delay:300ms] opacity-60" />
             </div>
           </div>
         </div>
