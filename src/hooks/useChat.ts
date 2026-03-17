@@ -61,6 +61,7 @@ export function useChat() {
             timestamp: new Date(),
             imageUrl: data.imageChallenge.imageUrl,
             imageQuestion: data.imageChallenge.questionFr,
+            hintSentences: data.imageChallenge.hintSentences,
           };
           setMessages((prev) => [...prev, challengeMessage]);
         }

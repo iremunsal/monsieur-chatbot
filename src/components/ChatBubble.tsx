@@ -2,6 +2,7 @@
 
 import { ChatMessage } from "@/types/chat";
 import TranslationToggle from "./TranslationToggle";
+import HintButton from "./HintButton";
 
 interface ChatBubbleProps {
   message: ChatMessage;
@@ -10,7 +11,8 @@ interface ChatBubbleProps {
 /**
  * Renders a single chat message bubble.
  * User messages appear on the right with a blue background.
- * Assistant messages appear on the left with a white background and include translation toggle.
+ * Assistant messages appear on the left with a white background,
+ * translation toggle, and hint button for image challenges.
  */
 export default function ChatBubble({ message }: ChatBubbleProps) {
   const isUser = message.role === "user";
@@ -47,6 +49,9 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
           textFr={message.contentFr}
           textEn={message.contentEn}
         />
+        {message.hintSentences && message.hintSentences.length > 0 && (
+          <HintButton hints={message.hintSentences} />
+        )}
         <span className="block text-[10px] mt-1 opacity-50">
           {message.timestamp.toLocaleTimeString("tr-TR", {
             hour: "2-digit",

@@ -249,6 +249,7 @@ export function processMessage(
         imageUrl: challenge.imageUrl,
         questionFr: challenge.questionFr,
         questionEn: challenge.questionEn,
+        hintSentences: challenge.hintSentences,
       },
     };
   }

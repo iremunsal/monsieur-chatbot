@@ -7,6 +7,12 @@ export interface ChatMessage {
   feedback?: Feedback;
   imageUrl?: string;
   imageQuestion?: string;
+  hintSentences?: HintSentence[];
+}
+
+export interface HintSentence {
+  fr: string;
+  en: string;
 }
 
 export interface Feedback {
@@ -24,5 +30,6 @@ export interface ChatResponse {
     imageUrl: string;
     questionFr: string;
     questionEn: string;
+    hintSentences: HintSentence[];
   };
 }
