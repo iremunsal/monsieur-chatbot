@@ -161,18 +161,6 @@ function generateFeedback(userMessage: string): Feedback {
     );
   }
 
-  // Check if sentence starts with uppercase
-  if (userMessage.length > 0 && userMessage[0] !== userMessage[0].toUpperCase()) {
-    issues.push("Cümle büyük harfle başlamalı");
-    corrected = corrected.charAt(0).toUpperCase() + corrected.slice(1);
-  }
-
-  // Check for sentence-ending punctuation
-  if (!/[.!?]$/.test(userMessage.trim())) {
-    issues.push("Cümle sonuna noktalama işareti eklemeyi unutmayın");
-    corrected = corrected.trim() + ".";
-  }
-
   // Check common mistakes
   if (/je suis\s+\d+\s+ans/i.test(lowerMessage)) {
     issues.push('"Je suis X ans" değil, "J\'ai X ans" olmalı (yaş için avoir kullanılır)');
